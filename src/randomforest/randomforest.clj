@@ -33,7 +33,8 @@
     (let [rf (make-randomforest config samples)]
       (when (pos? oob-ratio)
         ;(oob/out-of-bag-test config rf oob)
-      ))))
+      )
+      rf)))
 
 (defn apply-randomforest**
   "Applies a randomforest model onto a feature and returns leaves with element values."

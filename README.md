@@ -1,4 +1,4 @@
-# randomforests
+# randomforest
 
 An experimental implementation of Random Forest algorithm in Clojure.
 

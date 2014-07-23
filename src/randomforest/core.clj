@@ -3,6 +3,7 @@
         [randomforest.decisiontree :as dtree]
         [randomforest.randomforest :as forest]
         [randomforest.gini :as gini]
+        [randomforest.utils :as utils]
         [randomforest.samples :as samples]))
 
 
@@ -51,15 +52,17 @@
   (let [rs samples/regression-data
         rsr (:records rs)
         ;cs samples/classification-data
-        t (dtree/make-decisiontree regression-config 1 #{:f1 :f2 :f4} rsr)
-        rr (forest/make-randomforest regression-config rsr)
-        o  (forest/build regression-config rs)
+        ;t (dtree/make-decisiontree regression-config 1 #{:f1 :f2 :f4} rsr)
+        ;rr (forest/make-randomforest regression-config rsr)
+        rb  (forest/build regression-config rs)
         ;cr (forest/build classification-config cs)
+        rp (forest/predict regression-config rb rs)
         ]
-    ;(forest/save-randomforest rr "/tmp/r.f")
+    ;(forest/save-randomforest rb "/tmp/r.f")
     ;(pp/pprint (forest/apply-randomforest regression-config (forest/load-randomforest "/tmp/r.f") rsr))
-    (pp/pprint rr)
-    (pp/pprint (forest/predict regression-config rr rs))
+    (pp/pprint rb)
+    (pp/pprint rp)
+    (pp/pprint (utils/performance rp))
     ;(pp/pprint cr)
     ;(pp/pprint (forest/predict classification-config cr cs))
     ))
