@@ -1,6 +1,6 @@
 (ns randomforest.performance-test
   (:require [clojure.test :refer :all]
-            [randomforest.utils :refer :all]))
+            [randomforest.performance :refer :all]))
 
 (deftest performance-test
  (is (= (make-variations {:a [1 2] :b [3 4] :c [6 7]})

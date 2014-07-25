@@ -20,5 +20,6 @@
      :num-threshold-trials 5, ; number of making trial nodes at node building.
      :entropy-fn nil ; entropy function
      :max-entropy-score 0.4 ; max entropy score to create new nodes.
+     :parallel-search false
      })
   (is (thrown? Exception (check-keys {:dummy true})))))

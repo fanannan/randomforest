@@ -16,12 +16,14 @@
         class-map (zipmap kinds (range))
         data (map (fn[m](update-in m [:kind] #(get class-map %))) cleaned-data)
         records (mapv (fn[m][(dissoc m :kind) (:kind m)]) data)]
-    {:class-map class-map, :records records}))
+    {:class-map class-map, ; for converting name labels from/to number labels
+     :records records}))
 
 (def classification-data (get-classification-records "./resources/iris.csv"))
 
-(def regression-data
-  {:records [[{	:f1	5	:f2	0	:f3	0	:f4	4	}	44	]
+(def regression-data ; an artificial linear samples
+  {:class-map nil, ; for converting name labels from/to number labels
+   :records [[{	:f1	5	:f2	0	:f3	0	:f4	4	}	44	]
              [{	:f1	7	:f2	1	:f3	2	:f4	8	}	71	]
              [{	:f1	4	:f2	6	:f3	5	:f4	9	}	101	]
              [{	:f1	8	:f2	9	:f3	8	:f4	4	}	185	]

@@ -62,7 +62,7 @@
   (evaluate config (apply-randomforest** randomforest feature)))
 
 (defn apply-randomforest
-  "Applies a randomforest model onto records (value part is not neccessary) and returns a collection of corresponding estimation values"
+  "Applies a randomforest model onto records (value part is not neccessary) and returns a collection of corresponding estimation values. In the cases of classification, the actual and predicted values are represented in the numeric values."
   [config randomforest records]
   (dtree/assure-featurekeys records)
   (map #(apply-randomforest* config randomforest (dtree/get-features %)) records))
@@ -74,15 +74,16 @@
     (into {} (map (fn[[k v]][v k]) m))))
 
 (defn predict
-  "Predicts value or class with the given randomforest"
+  "Predicts value or class with the given randomforest. In the cases of classification, the actual and predicted values are represented in the original expressions."
   [config randomforest data]
   (let [class-map (get data :class-map nil)
         reversed-class-map (reverse-map class-map)
         records (shuffle (get data :records []))
-        predictions (apply-randomforest config randomforest records)]
-    (map (fn[r p][r (if (nil? reversed-class-map)
-                      p
-                      (get reversed-class-map p))])
+        predictions (apply-randomforest config randomforest records)
+        make-readable (fn[l](if (nil? reversed-class-map) l
+                              (get reversed-class-map l nil)))]
+    (map (fn[[m t] p][(if (nil? t) [m] [m (make-readable t)])
+                      (make-readable p)])
          records predictions)))
 
 (defn save-randomforest
