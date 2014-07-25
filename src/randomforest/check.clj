@@ -6,7 +6,7 @@
   "Checks if the all necessary keys in config given."
   [config]
   (let [cs (set (keys config))
-        os #{:warning :verbose :type :out-of-bag-ratio :num-trees :featurekey-selection-at-node :sub-sampling-ratio :valuation-mode :num-candidate-featurekeys :max-depth :min-elements :num-threshold-trials :entropy-fn :max-entropy-score}]
+        os #{:warning :verbose :type :out-of-bag-ratio :num-trees :featurekey-selection-at-node :sub-sampling-ratio :valuation-mode :num-candidate-featurekeys :max-depth :min-elements :num-threshold-trials :entropy-fn :max-entropy-score :parallel-search}]
     (when (not (empty? (s/difference cs os)))
       (throw (Exception. (str "extra key(s) given:" (s/difference cs os)))))
     (when (not (empty? (s/difference os cs)))

@@ -78,8 +78,8 @@
 (defn make-leaf
   "Makes a leaf of a decisiontree, holding all corresponding elements"
   [config samples]
-  (when (:verbose config)
-    (println "making a leaf:" (count samples)))
+  ;(when (:verbose config)
+  ;  (println "making a leaf:" (count samples)))
   {:type :leaf,
    :value (map get-value samples)})
 
@@ -88,8 +88,8 @@
 (defn make-node
   "Makes a branch node of a decisiontree."
   [config depth featurekeys [score featurekey threshold child1 child2]]
-  (when (:verbose config)
-    (println "making a node:" featurekey score))
+  ;(when (:verbose config)
+  ;  (println "making a node:" featurekey score))
   {:type :node,
    :divider [featurekey threshold], ; a vector of featurekey and a thereshold value
    :score score,

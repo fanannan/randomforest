@@ -3,7 +3,8 @@
         [randomforest.decisiontree :as dtree]
         [randomforest.randomforest :as forest]
         [randomforest.gini :as gini]
-        [randomforest.utils :as utils]
+        [randomforest.performance :as performance]
+        [randomforest.outofbag :as oob]
         [randomforest.samples :as samples]))
 
 
@@ -26,6 +27,8 @@
    :num-threshold-trials 5, ; number of making trial nodes at node building.
    :entropy-fn gini/gini ; entropy function
    :max-entropy-score 0.4 ; max entropy score to create new nodes.
+   ;; grid search
+   :parallel-search true ; seach best combination of the parameters parallely
    })
 
 ; classification mode is still under development
@@ -46,7 +49,10 @@
    :num-threshold-trials 5, ; number of making trial nodes at node building.
    :entropy-fn gini/gini ; entropy function
    :max-entropy-score 0.4 ; max entropy score to create new nodes.
+   ;; grid search
+   :parallel-search true ; seach best combination of the parameters parallely
    })
+
 
 (defn -main [& args]
   (let [rs samples/regression-data
@@ -62,7 +68,21 @@
     ;(pp/pprint (forest/apply-randomforest regression-config (forest/load-randomforest "/tmp/r.f") rsr))
     (pp/pprint rb)
     (pp/pprint rp)
-    (pp/pprint (utils/performance rp))
+    (pp/pprint (performance/performance rp))
+    ; grid search
+    (pp/pprint (performance/get-best-params-by-grid-search
+                              regression-config,
+                              {:max-depth [4 5],
+                               :min-elements [5 8],
+                               :num-threshold-trials [5 10],
+                               :max-entropy-score [0.25 0.5],
+                               :valuation-mode [:whole-mean, :leafwise-mean, :whole-median, :leafwise-median]}
+                              :correlation, ;:mse
+                              10
+                              (take (* (count rsr) 0.7) rsr)
+                              (drop (* (count rsr) 0.7) rsr)))
     ;(pp/pprint cr)
     ;(pp/pprint (forest/predict classification-config cr cs))
+    (when (:parallel-search regression-config)
+      (shutdown-agents))
     ))
