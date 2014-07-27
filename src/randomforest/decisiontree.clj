@@ -123,8 +123,14 @@
   ;(when (:verbose config)
   ;  (println "scores: " (map get-score division-infos))
   ;  (println "min score: " (apply min (map get-score division-infos))))
-  (let [best-value (apply min (map get-score division-infos))]
-    (first (filter #(= best-value (get-score %)) division-infos))))
+  (let [cf (fn[d](or (nil? d)
+                     (Double/isNaN d)
+                     (= Double/POSITIVE_INFINITY d)
+                     (= Double/NEGATIVE_INFINITY d)))
+        valid (remove cf (map get-score division-infos))
+        best-value (when-not (empty? valid)(apply min valid))]
+    (when-not (nil? best-value)
+        (first (filter #(= best-value (get-score %)) division-infos)))))
 
 (defn find-best-division-by-key
   "Finds a best division by the featurekey among num-feature-selection trials
@@ -151,7 +157,8 @@
           (small? samples min-elements))
       (make-leaf config samples)
       (let [division-info (find-best-division config featurekeys samples)]
-        (if (< (get-score division-info) max-entropy-score)
+        (if (and (not (nil? division-info))
+                 (< (get-score division-info) max-entropy-score))
           (make-node config (inc depth) featurekeys division-info)
           (make-leaf config samples)))))
 
