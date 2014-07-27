@@ -38,7 +38,7 @@
    :verbose true ; if true, showes supplimental information
    :type :classification, ; regression or classification
    :out-of-bag-ratio 0.25, ; out of bag ratio for validation
-   :num-trees 100, ; number of decision trees in the randomforest
+   :num-trees 250, ; number of decision trees in the randomforest
    :featurekey-selection-at-node false, ; if false, the candidate featurekeys used for a decisontree model is fixed once before starting building the decisontree. If true, the candidate featurekeys are repeatedly selected at making every node in the decisontree.
    :sub-sampling-ratio 0.7, ; sampling ratio for a decisiontree
    :valuation-mode :whole-mode, ; :whole-mode or :leafwise-mode, applied for all element values in the leaves (leaf-wise mode is not used)
@@ -89,15 +89,15 @@
     ; grid search (returns the best combination of the parameters)
     (pp/pprint (performance/get-best-params-by-grid-search
                               classification-config,
-                              {:max-depth [4 6],
+                              {:max-depth [4 6 8],
                                :min-elements [5 10 15],
-                               :num-threshold-trials [10 25],
-                               :max-entropy-score [0.25 0.5],
+                               :num-threshold-trials [3];10 25],
+                               :max-entropy-score [0.25 0.5 0.7 0.85],
                                :valuation-mode [:whole-mode, :leafwise-mode]}
                               :average-f-measure; :average-precision, :average-recall
                               10
                               (take (* (count csr) 0.7) csr)
-                              (take (* (count csr) 0.7) csr)))))
+                              (drop (* (count csr) 0.7) csr)))))
 
 (defn -main [& args]
   (regression-demo)

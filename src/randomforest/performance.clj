@@ -107,9 +107,9 @@
        (fn[c]
            (when (:verbose config)
              (println "validating: " c))
-           [c (repeat num-trials
-                      (validate (conj config c)
-                                learning-samples validation-samples))])
+           [c (repeatedly num-trials
+                          #(validate (conj config c)
+                                     learning-samples validation-samples))])
          vs)))
 
 (defn aggregate

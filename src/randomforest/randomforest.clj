@@ -10,9 +10,9 @@
    The size of a subset is defined by sub-sampling-ratio.
    Duplication of sample records is allowed."
   [{:keys [sub-sampling-ratio num-trees] :as config} samples]
-  (repeat num-trees
-          (take (int (* sub-sampling-ratio (count samples)))
-                (shuffle samples))))
+  (repeatedly num-trees
+              #(take (int (* sub-sampling-ratio (count samples)))
+                     (shuffle samples))))
 
 (defn make-randomforest
   "Makes a randomforest"
